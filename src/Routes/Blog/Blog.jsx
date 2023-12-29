@@ -15,6 +15,7 @@ import {
   getVideoEmbedUrl,
   ImgBlog,
   Xp,
+  formatData,
 } from "../../Resources/UniversalComponents";
 import {
   alwaysBlack,
@@ -166,12 +167,6 @@ export function Blog() {
     }
   };
 
-  const formatData = (theDate) => {
-    const parts = theDate.split("-");
-    const formatted = parts[2] + "/" + parts[1] + "/" + parts[0];
-
-    return formatted;
-  };
 
   return (
     <>

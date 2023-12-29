@@ -11,6 +11,7 @@ import ClassesToTeach from "./Routes/ClassesToTeach/ClassesToTeach";
 import { All, backDomain } from "./Resources/UniversalComponents";
 import SignUp from "./Routes/SignUp/SignUp";
 import MyCourses from "./Routes/MyCourses/MyCourses";
+import MyCalendar from "./Routes/MyCalendar/MyCalendar";
 import MyCoursesTemplate from "./Routes/MyCourses/MyCoursesTemplate";
 import axios from "axios";
 
@@ -54,6 +55,11 @@ function App() {
                 path="/homepage"
                 element={verifyToken() ? <HomePage /> : <Login />}
               />
+              <Route
+                path="/mycalendar"
+                element={verifyToken() ? <MyCalendar /> : <Login />}
+              />
+
               <Route
                 path="/extras"
                 element={verifyToken() ? <Extras /> : <Login />}

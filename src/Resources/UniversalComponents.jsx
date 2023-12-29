@@ -340,6 +340,14 @@ export const DisapearOnMobile = styled.div`
   }
 `;
 
+
+export const formatData = (theDate) => {
+  const parts = theDate.split("-");
+  const formatted = parts[2] + "/" + parts[1] + "/" + parts[0];
+
+  return formatted;
+};
+
 export const BackToHomePage = () => {
   return (
     <div

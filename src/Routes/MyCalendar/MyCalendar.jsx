@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   HOne,
   HThree,
@@ -7,164 +7,89 @@ import {
   RouteSizeControlBox,
 } from "../../Resources/Components/RouteBox";
 import { useUserContext } from "../../Application/SelectLanguage/SelectLanguage";
-import nextClasses from "../../assets/mockdata/student.json";
 import generalClasses from "../../assets/mockdata/universalcontent.json";
 import { Link } from "react-router-dom";
-import { ButtonDisapear, linkReset } from "../../Resources/UniversalComponents";
+import {
+  ButtonDisapear,
+  backDomain,
+  formatData,
+  formatDate,
+  linkReset,
+} from "../../Resources/UniversalComponents";
 import {
   darkGreyColor,
   primaryColor,
   textPrimaryColorContrast,
 } from "../../Styles/Styles";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
+import TopBar from "../../Application/TopBar/TopBar";
+import axios from "axios";
 
 export function MyCalendar() {
   const { UniversalTexts } = useUserContext();
   const [selectedOption, setSelectedOption] = useState("private");
+  const [_StudentId, setStudentId] = useState("");
+  const [nextTutoring, setNextTutoring] = useState({
+    nextTutoring: {
+      studentID: "oi",
+      date: "",
+      time: "",
+      meetingUrl: "/",
+    },
+  });
+  useEffect(() => {
+    let getLoggedUser = JSON.parse(localStorage.getItem("loggedIn"));
+    setStudentId(getLoggedUser.id || _StudentId);
+  }, []);
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);
   };
 
+  const handleSeeIsNextClassVisibleModal = () => {
+    let getLoggedUser = JSON.parse(localStorage.getItem("loggedIn"));
+    setStudentId(getLoggedUser.id || _StudentId);
+    const fetchNextClass = async () => {
+      try {
+        const response = await axios.get(
+          `${backDomain}/api/v1/nexttutoring/${_StudentId}`
+        );
+        setNextTutoring(response.data);
+      } catch (error) {
+        alert("Erro ao importar próximas aulas");
+      }
+    };
+
+    fetchNextClass();
+    setIsNextClassVisible(!isNextClassVisible);
+  };
+
+  useEffect(() => {
+    handleSeeIsNextClassVisibleModal;
+  }, []);
+
   return (
-    <RouteSizeControlBox className="smooth">
-      <RouteDiv>
-        <HOne>{UniversalTexts.calendar}</HOne>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            margin: "1rem",
-          }}
-        >
-          <Button
-            onClick={() => handleOptionChange("private")}
-            style={{
-              cursor: "pointer",
-              minWidth: "8rem",
-              padding: "0.5rem",
-              backgroundColor:
-                selectedOption === "private" ? primaryColor() : darkGreyColor(),
-              color: textPrimaryColorContrast(),
-            }}
-          >
-            {UniversalTexts.privateClasses}
+    <>
+      <TopBar />
+      <RouteSizeControlBox className="smooth">
+        <RouteDiv>
+          <Button onClick={handleSeeIsNextClassVisibleModal}>
+            Ver próxima aula particular
           </Button>
-          <Button
-            onClick={() => handleOptionChange("public")}
-            style={{
-              cursor: "pointer",
-              minWidth: "8rem",
-              padding: "0.5rem",
-              backgroundColor:
-                selectedOption === "public" ? primaryColor() : darkGreyColor(),
-              color: textPrimaryColorContrast(),
-            }}
-          >
-            {UniversalTexts.publicClasses}
+          <p>{nextTutoring.nextTutoring.studentID}</p>
+          <p>{nextTutoring.nextTutoring.date}</p>
+          <p>{nextTutoring.nextTutoring.time}</p>
+          <p>{nextTutoring.nextTutoring.meetingUrl}</p>
+          <Button onClick={handleSeeIsNextClassVisibleModal}>
+            Ver próximas aulas ao vivo
           </Button>
-          <ButtonDisapear
-            onClick={() => handleOptionChange("both")}
-            style={{
-              cursor: "pointer",
-              minWidth: "8rem",
-              padding: "0.5rem",
-              backgroundColor:
-                selectedOption === "both" ? primaryColor() : darkGreyColor(),
-              color: textPrimaryColorContrast(),
-            }}
-          >
-            {UniversalTexts.bothLists}
-          </ButtonDisapear>
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gap: "1rem",
-            gridTemplateColumns: selectedOption === "both" ? "1fr 1fr" : "1fr",
-          }}
-        >
-          {selectedOption === "private" || selectedOption === "both" ? (
-            <div>
-              <HTwo style={{ textAlign: "center" }}>
-                {UniversalTexts.privateClasses}
-              </HTwo>
-              {nextClasses.nextClasses.map((item, index) => (
-                <div key={index}>
-                  <HThree>
-                    {item.title} | {item.type} - {item.date} | {item.time}
-                  </HThree>
-                  <div>
-                    <ul>
-                      <li>
-                        {UniversalTexts.date}: {item.date}
-                      </li>
-                      <li>
-                        {UniversalTexts.time}: {item.time}
-                      </li>
-                      <li>
-                        {UniversalTexts.description}: {item.type}
-                      </li>
-                      <li>
-                        <Link
-                          style={linkReset}
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {UniversalTexts.accessClassLink}
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : null}
-          {selectedOption === "public" || selectedOption === "both" ? (
-            <div>
-              <HTwo style={{ textAlign: "center" }}>
-                {UniversalTexts.publicClasses}
-              </HTwo>
-              {generalClasses.nextLiveClasses.map((item, index) => (
-                <div key={index}>
-                  <HThree>
-                    {item.title} | {item.type} - {item.date} | {item.time}
-                  </HThree>
-                  <div>
-                    <ul>
-                      <li>
-                        {UniversalTexts.date}: {item.date}
-                      </li>
-                      <li>
-                        {UniversalTexts.time}: {item.time}
-                      </li>
-                      <li>
-                        {UniversalTexts.description}: {item.type}
-                      </li>
-                      <li>
-                        {" "}
-                        {UniversalTexts.password}: {item.password}
-                      </li>
-                      <li>
-                        <Link
-                          style={linkReset}
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {UniversalTexts.accessClassLink}
-                        </Link>{" "}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
-      </RouteDiv>
-    </RouteSizeControlBox>
+          <p>{nextTutoring.nextTutoring.studentID}</p>
+          <p>{nextTutoring.nextTutoring.date}</p>
+          <p>{nextTutoring.nextTutoring.time}</p>
+          <p>{nextTutoring.nextTutoring.meetingUrl}</p>
+        </RouteDiv>
+      </RouteSizeControlBox>
+    </>
   );
 }
 
