@@ -8,11 +8,7 @@ import {
   RouteSizeControlBox,
 } from "../../Resources/Components/RouteBox";
 import TopBar from "../../Application/TopBar/TopBar";
-import {
-  primaryColor,
-  secondaryColor,
-  textPrimaryColorContrast,
-} from "../../Styles/Styles";
+import { primaryColor, textPrimaryColorContrast } from "../../Styles/Styles";
 
 export function MyCalendar({ headers }) {
   const localizer = momentLocalizer(moment);
