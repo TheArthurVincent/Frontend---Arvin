@@ -34,7 +34,7 @@ export function MyCalendar({ headers }) {
             events={events}
             startAccessor="start"
             endAccessor="end"
-            style={{ margin: "50px" }}
+            style={{ margin: "1rem" }}
           />
         </RouteDiv>
       </RouteSizeControlBox>
