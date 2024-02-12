@@ -14,6 +14,7 @@ import { Adm } from "./Routes/Adm/Adm";
 import Ranking from "./Routes/Ranking/Ranking";
 import EnglishActivities from "./Routes/EnglishActivities/EnglishActivities";
 import NotFound from "./Routes/NotFound/NotFound";
+import MyCalendar from "./Routes/MyCalendar/MyCalendar";
 
 export const verifyToken = () => {
   const token = localStorage.getItem("authorization");
@@ -85,6 +86,10 @@ function App() {
     {
       path: "/extras",
       element: verifyToken() ? <Extras headers={headers} /> : <Login />,
+    },
+    {
+      path: "/calendar",
+      element: verifyToken() ? <MyCalendar headers={headers} /> : <Login />,
     },
     {
       path: "*",
